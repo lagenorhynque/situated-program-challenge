@@ -1,0 +1,9 @@
+{:duct.core/project-ns  rest-server
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :duct.module/sql {}
+
+ :duct.module/ataraxy
+ {}}

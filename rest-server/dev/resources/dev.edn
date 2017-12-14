@@ -1,0 +1,5 @@
+{:duct.core/environment :development
+ :duct.core/include ["rest_server/config"]
+
+ :duct.module/sql
+ {:database-url "jdbc:postgresql://localhost/postgres"}}
