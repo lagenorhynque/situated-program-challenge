@@ -2,7 +2,7 @@
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.9.0-RC1"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
                  [duct/core "0.6.1"]
                  [duct/module.logging "0.3.1"]
                  [duct/module.web "0.6.3"]
@@ -22,5 +22,5 @@
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources"]
                   :dependencies   [[integrant/repl "0.2.0"]
-                                   [eftest "0.4.0"]
+                                   [eftest "0.4.1"]
                                    [kerodon "0.9.0"]]}})
