@@ -12,3 +12,12 @@
 /comments CommentR POST
 
 /profile ProfileR GET
+
+/members MembersR GET POST
+/members/#MemberId MemberR GET
+/members/#MemberId/meetups/#MeetupId MeetupMemberR POST
+/members/#MemberId/groups/#GroupId GroupMemberR POST
+/groups GroupsR GET POST
+/groups/#GroupId/venues VenuesR GET POST
+/groups/#GroupId/meetups MeetupsR GET POST
+/groups/#GroupId/meetups/#MeetupId MeetupR GET

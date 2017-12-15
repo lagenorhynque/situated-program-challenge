@@ -4,6 +4,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Application
     ( getApplicationDev
@@ -21,7 +22,9 @@ module Application
 
 import Control.Monad.Logger                 (liftLoc, runLoggingT)
 import Database.Persist.Postgresql          (createPostgresqlPool, pgConnStr,
-                                             pgPoolSize, runSqlPool)
+                                             pgPoolSize,
+                                             -- runSqlPool
+                                            )
 import Import
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.Wai (Middleware)
@@ -42,6 +45,10 @@ import Handler.Common
 import Handler.Home
 import Handler.Comment
 import Handler.Profile
+import Handler.Members
+import Handler.Groups
+import Handler.Venues
+import Handler.Meetups
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -80,7 +87,7 @@ makeFoundation appSettings = do
         (pgPoolSize $ appDatabaseConf appSettings)
 
     -- Perform database migration using our application's logging settings.
-    runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
+    -- runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
 
     -- Return the foundation
     return $ mkFoundation pool

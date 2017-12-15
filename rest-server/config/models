@@ -16,3 +16,51 @@ Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived
     userId UserId Maybe
     deriving Eq
     deriving Show
+
+Group sql=groups
+    name Text sqltype=text Maybe
+    createdAt UTCTime Maybe
+    deriving Eq
+    deriving Show
+
+GroupMember sql=groups_members
+    groupId GroupId
+    memberId MemberId
+    Primary groupId memberId
+    admin Bool default=false Maybe
+    deriving Eq
+    deriving Show
+
+Meetup sql=meetups
+    title Text sqltype=text
+    startAt UTCTime Maybe
+    endAt UTCTime Maybe
+    venueId VenueId Maybe
+    groupId GroupId Maybe
+    deriving Eq
+    deriving Show
+
+MeetupMember sql=meetups_members
+    meetupId MeetupId
+    memberId MemberId
+    Primary meetupId memberId
+    deriving Eq
+    deriving Show
+
+Member sql=members
+    firstName Text sqltype=text Maybe
+    lastName Text sqltype=text Maybe
+    email Text sqltype=text Maybe
+    deriving Eq
+    deriving Show
+
+Venue sql=venues
+    name Text sqltype=text Maybe
+    postalCode Text sqltype=text Maybe
+    prefecture Text sqltype=text Maybe
+    city Text sqltype=text Maybe
+    street1 Text sqltype=text Maybe
+    street2 Text sqltype=text Maybe
+    groupId GroupId Maybe
+    deriving Eq
+    deriving Show
