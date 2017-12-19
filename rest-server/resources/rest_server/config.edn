@@ -3,7 +3,16 @@
 
  :duct.module/logging {}
  :duct.module.web/api {}
- :duct.module/sql {}
+ :duct.module/sql
+ {:database-url "jdbc:postgresql://localhost:5432/meetup?user=meetup&password=password123"}
 
  :duct.module/ataraxy
- {}}
+ {"/members"
+  {:get [:member/list]
+   [:post {member :body-params}] [:member/create member]
+   ["/" member-id]
+   {:get [:member/fetch ^int member-id]}}}
+
+ :rest-server.handler.member/list {:db #ig/ref :duct.database/sql}
+ :rest-server.handler.member/create {:db #ig/ref :duct.database/sql}
+ :rest-server.handler.member/fetch {:db #ig/ref :duct.database/sql}}
