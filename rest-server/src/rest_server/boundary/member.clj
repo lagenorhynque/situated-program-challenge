@@ -1,9 +1,8 @@
 (ns rest-server.boundary.member
-  (:require [camel-snake-kebab.core :refer [->kebab-case ->snake_case]]
-            [camel-snake-kebab.extras :refer [transform-keys]]
-            [clojure.java.jdbc :as jdbc]
+  (:require [clojure.java.jdbc :as jdbc]
             [duct.database.sql]
-            [honeysql.core :as sql]))
+            [honeysql.core :as sql]
+            [rest-server.util :as util]))
 
 (defprotocol Members
   (list-members [db])
@@ -17,10 +16,10 @@
                     :from :members)
          sql/format
          (jdbc/query db)
-         (map #(transform-keys ->kebab-case %))))
+         (map util/transform-keys-to-kebab)))
   (create-member [{db :spec} member]
     (->> member
-         (transform-keys ->snake_case)
+         util/transform-keys-to-snake
          (jdbc/insert! db :members)
          ffirst
          val))
@@ -30,5 +29,5 @@
                     :where [:= :id member-id])
          sql/format
          (jdbc/query db)
-         (transform-keys ->kebab-case)
+         util/transform-keys-to-kebab
          first)))
