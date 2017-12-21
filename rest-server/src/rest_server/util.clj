@@ -14,3 +14,6 @@
   (-> s
       Instant/parse
       Timestamp/from))
+
+(defn now []
+  (Timestamp/from (Instant/now)))

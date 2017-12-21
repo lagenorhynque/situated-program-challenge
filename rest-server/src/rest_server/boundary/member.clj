@@ -7,7 +7,8 @@
 (defprotocol Members
   (list-members [db])
   (create-member [db member])
-  (fetch-member [db member-id]))
+  (fetch-member [db member-id])
+  (fetch-members [db member-ids]))
 
 (extend-protocol Members
   duct.database.sql.Boundary
@@ -30,4 +31,11 @@
          sql/format
          (jdbc/query db)
          util/transform-keys-to-kebab
-         first)))
+         first))
+  (fetch-members [{db :spec} member-ids]
+    (->> (sql/build :select :*
+                    :from :members
+                    :where [:in :id member-ids])
+         sql/format
+         (jdbc/query db)
+         util/transform-keys-to-kebab)))
