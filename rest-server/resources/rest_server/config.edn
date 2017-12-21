@@ -11,13 +11,25 @@
   {:get [:member/list]
    [:post {member :body-params}] [:member/create member]
    ["/" member-id]
-   {:get [:member/fetch ^int member-id]}}
+   {:get [:member/fetch ^int member-id]
+    "/meetups"
+    {["/" meetup-id]
+     {:post [:meetup/join ^int member-id ^int meetup-id]}}}}
   "/groups"
   {["/" group-id]
-   {"/venues"
+   {"/meetups"
+    {:get [:meetup/list ^int group-id]
+     [:post {meetup :body-params}] [:meetup/create ^int group-id meetup]
+     ["/" meetup-id]
+     {:get [:meetup/fetch ^int group-id ^int meetup-id]}}
+    "/venues"
     {:get [:venue/list ^int group-id]
      [:post {venue :body-params}] [:venue/create ^int group-id venue]}}}}
 
+ :rest-server.handler.meetup/list {:db #ig/ref :duct.database/sql}
+ :rest-server.handler.meetup/create {:db #ig/ref :duct.database/sql}
+ :rest-server.handler.meetup/fetch {:db #ig/ref :duct.database/sql}
+ :rest-server.handler.meetup/join {:db #ig/ref :duct.database/sql}
  :rest-server.handler.member/list {:db #ig/ref :duct.database/sql}
  :rest-server.handler.member/create {:db #ig/ref :duct.database/sql}
  :rest-server.handler.member/fetch {:db #ig/ref :duct.database/sql}

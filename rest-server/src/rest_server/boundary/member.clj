@@ -16,7 +16,7 @@
                     :from :members)
          sql/format
          (jdbc/query db)
-         (map util/transform-keys-to-kebab)))
+         util/transform-keys-to-kebab))
   (create-member [{db :spec} member]
     (->> member
          util/transform-keys-to-snake

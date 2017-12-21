@@ -6,7 +6,8 @@
 
 (defprotocol Venues
   (list-venues [db group-id])
-  (create-venue [db member]))
+  (create-venue [db member])
+  (fetch-venue [db venue-id]))
 
 (extend-protocol Venues
   duct.database.sql.Boundary
@@ -16,10 +17,18 @@
                     :where [:= :group_id group-id])
          sql/format
          (jdbc/query db)
-         (map util/transform-keys-to-kebab)))
+         util/transform-keys-to-kebab))
   (create-venue [{db :spec} venue]
     (->> venue
          util/transform-keys-to-snake
          (jdbc/insert! db :venues)
          ffirst
-         val)))
+         val))
+  (fetch-venue [{db :spec} venue-id]
+    (->> (sql/build :select :*
+                    :from :venues
+                    :where [:= :id venue-id])
+         sql/format
+         (jdbc/query db)
+         util/transform-keys-to-kebab
+         first)))
