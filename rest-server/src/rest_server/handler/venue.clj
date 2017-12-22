@@ -1,8 +1,7 @@
 (ns rest-server.handler.venue
   (:require [ataraxy.response :as response]
-            [clojure.set :as set]
             [integrant.core :as ig]
-            [rest-server.boundary.venue :as db-venue]))
+            [rest-server.boundary.db.venue :as db.venue]))
 
 (defn venue-with-address [{:keys [id name postal-code prefecture city street1 street2]}]
   {:venue-id id
@@ -16,7 +15,7 @@
 (defmethod ig/init-key ::list [_ {:keys [db]}]
   (fn [{[_ group-id] :ataraxy/result}]
     [::response/ok (map venue-with-address
-                        (db-venue/list-venues db group-id))]))
+                        (db.venue/list-venues db group-id))]))
 
 (defmethod ig/init-key ::create [_ {:keys [db]}]
   (fn [{[_ group-id {:keys [address] :as venue}] :ataraxy/result}]
@@ -27,7 +26,7 @@
                   :street1 (:address1 address)
                   :street2 (:address2 address)
                   :group-id group-id}
-          id (db-venue/create-venue db venue')]
+          id (db.venue/create-venue db venue')]
       [::response/ok (-> venue'
                          (assoc :id id)
                          venue-with-address)])))
