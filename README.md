@@ -62,17 +62,18 @@ Rich HickeyのClojure/Conj2017キーノートの考察として、外界の変�
 * 開発者にとって修正のやりさすさ、変更のわかりやすさも主観的に判定
 
 ## 開発環境
-* docker, docker-compose 
+* docker, docker-compose
     * MacOS: https://docs.docker.com/docker-for-mac/install/
     * Windows: https://docs.docker.com/docker-for-windows/install/
     * Linux:　https://github.com/docker/compose/releases
 * 自分の選択した言語に必要な開発環境は追記してください。
     * dockerを使う必要はありません。
+* [Leiningen](https://leiningen.org/#install): DBマイグレーション、Clojureのビルド
 
 ### Postgresqlサーバの起動
 
 ```
-docker-compose up 
+docker-compose up
 ```
 * Daemonとして走らせたい場合は `-d` オプションを追加。
 * 5432番ポートでソケットを開いているので、ホストOSのpsql、または他のSQLツールで接続可能。

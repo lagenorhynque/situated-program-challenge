@@ -1,6 +1,15 @@
 # rest-server
 
-FIXME: description
+REST server implementation with Clojure & [Duct](https://github.com/duct-framework/duct).
+
+## Database Setup
+
+```sh
+cd ..
+docker-compose up -d
+lein migratus up 20171204200333
+cd rest-server
+```
 
 ## Developing
 
