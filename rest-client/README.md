@@ -1,32 +1,27 @@
 # rest-client
 
-FIXME: description
-
-## Installation
-
-Download from http://example.com/FIXME.
+REST client implementation with Clojure.
 
 ## Usage
 
-FIXME: explanation
+- with Leiningen:
 
-    $ java -jar rest-client-0.1.0-standalone.jar [args]
+```sh
+lein uberjar
+java -jar target/uberjar/rest-client-0.1.0-SNAPSHOT-standalone.jar [args]
+```
 
-## Options
+OR
 
-FIXME: listing of options this app accepts.
+```sh
+lein run [args]
+```
 
-## Examples
+- with [clj](https://clojure.org/guides/deps_and_cli) command:
 
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+```sh
+clj -m rest-client.core [args]
+```
 
 ## License
 
