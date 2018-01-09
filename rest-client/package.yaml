@@ -21,6 +21,11 @@ description:         Please see the README on Github at <https://github.com/lage
 
 dependencies:
 - base >= 4.7 && < 5
+- http-conduit
+- aeson
+- lens
+- text
+- bytestring
 
 library:
   source-dirs: src
