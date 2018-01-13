@@ -16,12 +16,13 @@
        util/transform-keys-to-kebab
        first))
 
-(defn insert! [{db :spec} table row-map]
+(defn insert! [{db :spec} table row-map & {:keys [id-col]
+                                           :or {id-col :id}}]
   (->> row-map
        util/transform-keys-to-snake
        (jdbc/insert! db table)
-       ffirst
-       val))
+       first
+       id-col))
 
 (defn insert-multi! [{db :spec} table row-maps]
   (->> row-maps

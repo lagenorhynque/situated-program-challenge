@@ -25,4 +25,6 @@
                   :resource-paths ["dev/resources"]
                   :dependencies   [[integrant/repl "0.3.0"]
                                    [eftest "0.4.1"]
-                                   [kerodon "0.9.0"]]}})
+                                   [kerodon "0.9.0"]
+                                   [com.gearswithingears/shrubbery "0.4.1"]]
+                  :plugins [[lein-eftest "0.4.1"]]}})

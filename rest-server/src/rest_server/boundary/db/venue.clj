@@ -5,7 +5,7 @@
 
 (defprotocol Venues
   (list-venues [db group-id])
-  (create-venue [db member])
+  (create-venue [db venue])
   (fetch-venue [db venue-id]))
 
 (extend-protocol Venues

@@ -11,9 +11,9 @@
   (transform-keys #(->snake_case % :separator \-) m))
 
 (defn string->timestamp [s]
-  (-> s
-      Instant/parse
-      Timestamp/from))
+  (some-> s
+          Instant/parse
+          Timestamp/from))
 
 (defn now []
   (Timestamp/from (Instant/now)))
