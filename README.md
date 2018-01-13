@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/clj-version1.svg?style=svg)](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/clj-version1)
 
 ---
 
@@ -96,6 +97,3 @@ lein migratus up 20171204200333
 * [swagger editor](https://swagger.io/swagger-editor/)でswagger-spec-v1.jsonを開く。
 * スペックをUIで確認。
 * Swagger codegenでコード生成することも可能だが、必ずしもコードのクオリティが高くないので、見極めが必要。
-
-
-

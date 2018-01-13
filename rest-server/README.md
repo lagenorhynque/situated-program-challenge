@@ -7,7 +7,7 @@ REST server implementation with Clojure & [Duct](https://github.com/duct-framewo
 ```sh
 cd ..
 docker-compose up -d
-lein migratus up 20171204200333
+lein migratus migrate
 cd rest-server
 ```
 
