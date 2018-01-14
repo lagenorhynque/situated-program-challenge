@@ -25,5 +25,5 @@
     (throw (IllegalArgumentException. "Exactly 2 arguments must be specified")))
   (let [{:keys [status body]} (apply http args)]
     (when (not= status 200)
-      (print status \tab))
+      (print (str status \tab)))
     (println body)))

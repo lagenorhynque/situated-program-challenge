@@ -27,17 +27,20 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "project.clj" }}
+          - v1-dependencies-{{ checksum "rest-server/project.clj" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
       - run: cd rest-server; lein deps
+      - run: cd rest-client; lein deps
 
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "project.clj" }}
+          key: v1-dependencies-{{ checksum "rest-server/project.clj" }}
 
       # run tests!
       - run: cd rest-server; lein eftest
       - run: cd rest-server; lein lint
+      - run: cd rest-client; lein eftest
+      - run: cd rest-client; lein lint
