@@ -6,6 +6,7 @@ database:
   # something like:
   #
   #   database: "_env:PGDATABASE:rest-server_test"
-  database: rest-server_test
+  database: meetup_test
+  port:     5433
 
 auth-dummy-login: true
