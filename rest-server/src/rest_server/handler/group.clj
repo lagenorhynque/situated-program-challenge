@@ -7,6 +7,7 @@
             [rest-server.boundary.db.venue :as db.venue]
             [rest-server.handler.meetup :as meetup]
             [rest-server.handler.member :as member]
+            [rest-server.handler.online-venue :as online-venue]
             [rest-server.handler.venue :as venue]
             [rest-server.util :as util]))
 
@@ -17,10 +18,12 @@
 
 (defn fetch-group-detail [db {:keys [id] :as group}]
   (let [admins (db.group/fetch-group-admin-members db id)
-        venues (db.venue/list-venues db id)
+        venues (db.venue/list-venues db id :venue-type/physical)
+        online-venues (db.venue/list-venues db id :venue-type/online)
         meetups (db.meetup/list-meetups db id)]
     (assoc (group-with-admin group admins)
            :venues (map venue/venue-with-address venues)
+           :online-venues (map online-venue/online-venue-with-id online-venues)
            :meetups (map (partial meetup/fetch-meetup-detail db) meetups))))
 
 (defmethod ig/init-key ::list [_ {:keys [db]}]

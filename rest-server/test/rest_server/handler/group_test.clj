@@ -34,7 +34,7 @@
                                                 :email "y.tsushima@uranohoshi.ac.jp"}]}
                                            group-id))
                                     rest-server.boundary.db.venue/Venues
-                                    (list-venues [_ group-id]
+                                    (list-venues [_ group-id _]
                                       (get {1 [{:id 1
                                                 :name "Tokyo Dome"
                                                 :postal-code "112-0004"
@@ -301,7 +301,7 @@
                                         :last-name "Kurosawa"
                                         :email "d.kurosawa@uranohoshi.ac.jp"}])
                                     rest-server.boundary.db.venue/Venues
-                                    (list-venues [_ _]
+                                    (list-venues [_ _ _]
                                       [{:id 2
                                         :name "Yokohama Arena"
                                         :postal-code "222-0033"
