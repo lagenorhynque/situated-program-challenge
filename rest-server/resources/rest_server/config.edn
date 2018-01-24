@@ -46,4 +46,7 @@
      {:get [:meetup/fetch ^int group-id ^int meetup-id]}}
     "/venues"
     {:get [:venue/list ^int group-id]
-     [:post {venue :body-params}] [:venue/create ^int group-id venue]}}}}}
+     [:post {venue :body-params}] [:venue/create ^int group-id venue]}
+    "/online-venues"
+    {:get [:online-venue/list ^int group-id]
+     [:post {venue :body-params}] [:online-venue/create ^int group-id venue]}}}}}

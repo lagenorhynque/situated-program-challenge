@@ -4,21 +4,24 @@
             [rest-server.boundary.db.meetup :as db.meetup]
             [rest-server.boundary.db.venue :as db.venue]
             [rest-server.handler.member :as member]
+            [rest-server.handler.online-venue :as online-venue]
             [rest-server.handler.venue :as venue]
             [rest-server.util :as util]))
 
-(defn meetup-with-venue-and-members [{:keys [id title start-at end-at]} venue members]
+(defn meetup-with-venue-and-members [{:keys [id title start-at end-at]} venue online-venue members]
   {:event-id id
    :title title
    :start-at start-at
    :end-at end-at
    :venue (venue/venue-with-address venue)
+   :online-venue (online-venue/online-venue-with-id online-venue)
    :members (map member/member-with-id members)})
 
-(defn fetch-meetup-detail [db {:keys [id venue-id] :as meetup}]
+(defn fetch-meetup-detail [db {:keys [id venue-id online-venue-id] :as meetup}]
   (let [venue (db.venue/fetch-venue db venue-id)
+        online-venue (db.venue/fetch-venue db online-venue-id)
         members (db.meetup/fetch-meetup-members db id)]
-    (meetup-with-venue-and-members meetup venue members)))
+    (meetup-with-venue-and-members meetup venue online-venue members)))
 
 (defn get-meetup [db meetup-id]
   (when-let [meetup (db.meetup/fetch-meetup db meetup-id)]
