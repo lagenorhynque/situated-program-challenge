@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: fpco/stack-build:lts-10.3
+      - image: postgres:9.6
+        environment:
+        - POSTGRES_PASSWORD: password123
+        - POSTGRES_USER: meetup
+        - POSTGRES_DB: meetup_test
+    working_directory: /home/stackage
+    steps:
+      - checkout
+      - restore_cache:
+          key: cache
+      - run: sudo apt update && sudo apt install -y netcat postgresql-client
+      - run:
+          name: DB migration
+          command: |
+            cd rest-server
+            export PGPASSWORD=password123
+            find ../resources/migrations -name *.up.sql | sort | xargs -n 1 psql -h localhost -p 5432 -U meetup -d meetup_test -f
+      - run: cd rest-server; stack build --test --only-dependencies --no-terminal --system-ghc
+      - run: cd rest-client; stack build --test --only-dependencies --no-terminal --system-ghc
+      - save_cache:
+          key: cache
+          paths:
+            - ~/.stack
+      - run: cd rest-server; export PGPORT=5432; stack install --test --no-terminal --system-ghc
+      - run: cd rest-client; stack install --test --no-terminal --system-ghc

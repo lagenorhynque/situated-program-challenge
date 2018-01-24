@@ -6,14 +6,14 @@ DB = meetup_test
 
 create-tables:
 	@export PGPASSWORD=$(PASSWORD) && \
-	make up-scripts | xargs -n 1 psql -h $(HOST) -p $(PORT) -U $(USER) $(DB) -f
+	make up-scripts | xargs -n 1 psql -h $(HOST) -p $(PORT) -U $(USER) -d $(DB) -f
 
 drop-tables:
 	@export PGPASSWORD=$(PASSWORD) && \
-	make down-scripts | xargs -n 1 psql -h $(HOST) -p $(PORT) -U $(USER) $(DB) -f
+	make down-scripts | xargs -n 1 psql -h $(HOST) -p $(PORT) -U $(USER) -d $(DB) -f
 
 up-scripts:
-	@find ../resources/migrations/ -name *.up.sql
+	@find ../resources/migrations -name *.up.sql | sort
 
 down-scripts:
-	@find ../resources/migrations/ -name *.down.sql | gtac
+	@find ../resources/migrations -name *.down.sql | sort | gtac

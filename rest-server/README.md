@@ -7,7 +7,7 @@ REST server implementation with Haskell & [Yesod](https://github.com/yesodweb/ye
 ```sh
 cd ..
 docker-compose up -d
-lein migratus up 20171204200333
+lein migratus migrate
 cd rest-server
 ```
 
@@ -33,6 +33,8 @@ As your code changes, your site will be automatically be recompiled and redeploy
 ## Tests
 
 ```sh
+docker-compose -f docker-compose.test.yml up -d
+make create-tables
 stack test --flag rest-server:library-only --flag rest-server:dev
 ```
 
