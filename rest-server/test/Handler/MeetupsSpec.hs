@@ -11,6 +11,8 @@ import           Codec.Binary.UTF8.String   (decodeString)
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BLC
 
+import qualified CustomField.VenueType      as VenueType
+
 spec :: Spec
 spec = withApp $ do
 
@@ -24,6 +26,8 @@ spec = withApp $ do
                                          , venueStreet1 = Just "Kohoku-ku"
                                          , venueStreet2 = Just "3-10 Shinyokohama"
                                          , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
                                          }
             v2id <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
                                          , venuePostalCode = Just "457-0833"
@@ -32,18 +36,22 @@ spec = withApp $ do
                                          , venueStreet1 = Just "Minami-ku"
                                          , venueStreet2 = Just "5-1-16 Higashimatabeecho"
                                          , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
                                          }
             mu1id <- runDB $ insert Meetup { meetupTitle = "Aqours First LoveLive!"
                                            , meetupStartAt = Just (read "2017-02-25 07:30:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-02-25 12:30:00.000" :: UTCTime)
                                            , meetupVenueId = Just v1id
                                            , meetupGroupId = Just gid
+                                           , meetupOnlineVenueId = Nothing
                                            }
             mu2id <- runDB $ insert Meetup { meetupTitle = "Aqours 2nd LoveLive! Nagoya"
                                            , meetupStartAt = Just (read "2017-08-05 08:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just v2id
                                            , meetupGroupId = Just gid
+                                           , meetupOnlineVenueId = Nothing
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "You"
                                           , memberLastName = Just "Watanabe"
@@ -143,12 +151,15 @@ spec = withApp $ do
                                         , venueStreet1 = Just "Chuo-ku"
                                         , venueStreet2 = Just "6-6-12-2 Minatojima Nakamachi"
                                         , venueGroupId = Just gid
+                                        , venueUrl = Nothing
+                                        , venueVenueType = Just VenueType.Physical
                                         }
             let mu = Meetup { meetupTitle = "Aqours 2nd LoveLive! Kobe"
                             , meetupStartAt = Just (read "2017-08-19 08:00:00.000" :: UTCTime)
                             , meetupEndAt = Just (read "2017-08-19 13:00:00.000" :: UTCTime)
                             , meetupVenueId = Just vid
                             , meetupGroupId = Nothing
+                            , meetupOnlineVenueId = Nothing
                             }
             request $ do
                 setMethod "POST"
@@ -187,12 +198,15 @@ spec = withApp $ do
                                         , venueStreet1 = Just "Minami-ku"
                                         , venueStreet2 = Just "5-1-16 Higashimatabeecho"
                                         , venueGroupId = Just gid
+                                        , venueUrl = Nothing
+                                        , venueVenueType = Just VenueType.Physical
                                         }
             muid <- runDB $ insert Meetup { meetupTitle = "Aqours 2nd LoveLive! Nagoya"
                                            , meetupStartAt = Just (read "2017-08-05 08:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just vid
                                            , meetupGroupId = Just gid
+                                           , meetupOnlineVenueId = Nothing
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "Dia"
                                           , memberLastName = Just "Kurosawa"
@@ -263,12 +277,15 @@ spec = withApp $ do
                                         , venueStreet1 = Just "Minami-ku"
                                         , venueStreet2 = Just "5-1-16 Higashimatabeecho"
                                         , venueGroupId = Just gid
+                                        , venueUrl = Nothing
+                                        , venueVenueType = Just VenueType.Physical
                                         }
             muid <- runDB $ insert Meetup { meetupTitle = "Aqours 2nd LoveLive! Nagoya"
                                            , meetupStartAt = Just (read "2017-08-05 08:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just vid
                                            , meetupGroupId = Just gid
+                                           , meetupOnlineVenueId = Nothing
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "You"
                                           , memberLastName = Just "Watanabe"

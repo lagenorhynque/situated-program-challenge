@@ -37,6 +37,7 @@ Meetup sql=meetups
     endAt UTCTime Maybe
     venueId VenueId Maybe
     groupId GroupId Maybe
+    onlineVenueId VenueId Maybe
     deriving Eq
     deriving Show
 
@@ -62,5 +63,7 @@ Venue sql=venues
     street1 Text sqltype=text Maybe
     street2 Text sqltype=text Maybe
     groupId GroupId Maybe
+    url Text sqltype=text Maybe
+    venueType VenueType Maybe default="physical"
     deriving Eq
     deriving Show

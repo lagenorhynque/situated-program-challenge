@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/hs-version1.svg?style=svg)](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/hs-version1)
+[![CircleCI](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/hs-version2.svg?style=svg)](https://circleci.com/gh/lagenorhynque/situated-program-challenge/tree/hs-version2)
 
 ---
 

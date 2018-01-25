@@ -9,6 +9,7 @@ import           Codec.Binary.UTF8.String   (decodeString)
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BLC
 
+import qualified CustomField.VenueType      as VenueType
 import           Handler.Venues             (PostAddress (..), PostVenue (..))
 
 spec :: Spec
@@ -24,6 +25,8 @@ spec = withApp $ do
                                          , venueStreet1 = Just "Kohoku-ku"
                                          , venueStreet2 = Just "3-10 Shinyokohama"
                                          , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
                                          }
             v2id <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
                                          , venuePostalCode = Just "457-0833"
@@ -32,6 +35,8 @@ spec = withApp $ do
                                          , venueStreet1 = Just "Minami-ku"
                                          , venueStreet2 = Just "5-1-16 Higashimatabeecho"
                                          , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
                                          }
             request $ do
                 setMethod "GET"

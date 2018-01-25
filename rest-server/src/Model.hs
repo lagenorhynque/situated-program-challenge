@@ -17,6 +17,8 @@ import           Database.Persist.Quasi
 import qualified Data.Aeson.Casing      as Casing
 import qualified Text.Casing            as Casing
 
+import           CustomField.VenueType
+
 -- You can define all of your database entities in the entities file.
 -- You can find more information on persistent and how to declare entities
 -- at:
@@ -27,4 +29,3 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"]
 deriveJSON (Casing.aesonPrefix Casing.kebab) ''Group
 deriveJSON (Casing.aesonPrefix Casing.kebab) ''Meetup
 deriveJSON (Casing.aesonPrefix Casing.kebab) ''Member
-deriveJSON (Casing.aesonPrefix Casing.kebab) ''Venue

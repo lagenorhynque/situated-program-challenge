@@ -8,16 +8,18 @@ import           Import
 
 import           Data.Aeson.TH
 
-import           Control.Lens       hiding ((.=), (^.))
-import qualified Data.Aeson.Casing  as Casing
+import           Control.Lens          hiding ((.=), (^.))
+import qualified Data.Aeson.Casing     as Casing
 import           Data.Aeson.Lens
-import           Database.Esqueleto ((^.))
-import qualified Database.Esqueleto as E
-import qualified Text.Casing        as Casing
+import           Database.Esqueleto    ((^.))
+import qualified Database.Esqueleto    as E
+import qualified Text.Casing           as Casing
 
-import           Handler.Meetups    (fetchMeetupDetail)
-import           Handler.Members    (memberValueWithId)
-import           Handler.Venues     (venueValueWithAddress)
+import qualified CustomField.VenueType as VenueType
+import           Handler.Meetups       (fetchMeetupDetail)
+import           Handler.Members       (memberValueWithId)
+import           Handler.OnlineVenues  (onlineVenueValueWithId)
+import           Handler.Venues        (venueValueWithAddress)
 
 getGroupsR :: Handler Value
 getGroupsR = do
@@ -59,12 +61,15 @@ fetchGroupDetail eg@(Entity gid Group{..}) = do
                         E.where_ $ (groupMember' ^. GroupMemberGroupId E.==. E.val gid)
                             E.&&. (groupMember' ^. GroupMemberAdmin E.==. E.val (Just True))
                         return member'
-    vs <- runDB $ selectList [VenueGroupId ==. Just gid] []
+    vs <- runDB $ selectList [VenueGroupId ==. Just gid, VenueVenueType ==. Just VenueType.Physical] []
     let venueDetails = map venueValueWithAddress vs
+    ovs <- runDB $ selectList [VenueGroupId ==. Just gid, VenueVenueType ==. Just VenueType.Online] []
+    let onlineVenueDetails = map onlineVenueValueWithId ovs
     ms <- runDB $ selectList [MeetupGroupId ==. Just gid] []
     meetupDetails <- mapM fetchMeetupDetail ms
     return $ toJSON (groupValueWithAdmin eg admins)
              & _Object . at "venues" ?~ toJSON venueDetails
+             & _Object . at "online-venues" ?~ toJSON onlineVenueDetails
              & _Object . at "meetups" ?~ toJSON meetupDetails
 
 groupValueWithAdmin :: Entity Group -> [Entity Member] -> Value

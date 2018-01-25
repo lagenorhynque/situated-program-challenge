@@ -5,11 +5,12 @@ module Handler.Meetups where
 
 import           Import
 
-import           Database.Esqueleto ((^.))
-import qualified Database.Esqueleto as E
+import           Database.Esqueleto   ((^.))
+import qualified Database.Esqueleto   as E
 
-import           Handler.Members    (memberValueWithId)
-import           Handler.Venues     (venueValueWithAddress)
+import           Handler.Members      (memberValueWithId)
+import           Handler.OnlineVenues (onlineVenueValueWithId)
+import           Handler.Venues       (venueValueWithAddress)
 
 getMeetupsR :: GroupId -> Handler Value
 getMeetupsR groupId = do
@@ -38,12 +39,13 @@ postMeetupMemberR memberId meetupId = do
 fetchMeetupDetail :: Entity Meetup -> Handler Value
 fetchMeetupDetail em@(Entity mid Meetup{..}) = do
     v <- maybe (return Nothing) (runDB . getEntity) meetupVenueId
+    ov <- maybe (return Nothing) (runDB . getEntity) meetupOnlineVenueId
     ms <- runDB $ E.select
                 $ E.from $ \(member' `E.InnerJoin` meetupMember') -> do
                     E.on $ member' ^. MemberId E.==. meetupMember' ^. MeetupMemberMemberId
                     E.where_ $ meetupMember' ^. MeetupMemberMeetupId E.==. E.val mid
                     return member'
-    return $ meetupWithVenueAndMembers em v ms
+    return $ meetupWithVenueAndMembers em v ov ms
 
 getMeetup :: MeetupId -> Handler Value
 getMeetup mid = do
@@ -51,12 +53,13 @@ getMeetup mid = do
     meetupDetail <- fetchMeetupDetail $ Entity mid m
     returnJson meetupDetail
 
-meetupWithVenueAndMembers :: Entity Meetup -> Maybe (Entity Venue) -> [Entity Member] -> Value
-meetupWithVenueAndMembers (Entity mid Meetup{..}) venue members =
+meetupWithVenueAndMembers :: Entity Meetup -> Maybe (Entity Venue) -> Maybe (Entity Venue) -> [Entity Member] -> Value
+meetupWithVenueAndMembers (Entity mid Meetup{..}) venue onlineVenue members =
     object [ "event-id" .= mid
            , "title" .= meetupTitle
            , "start-at" .= meetupStartAt
            , "end-at" .= meetupEndAt
            , "venue" .= fmap venueValueWithAddress venue
+           , "online-venue" .= fmap onlineVenueValueWithId onlineVenue
            , "members" .= fmap memberValueWithId members
            ]

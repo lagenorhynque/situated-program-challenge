@@ -8,12 +8,14 @@ import           Import
 
 import           Data.Aeson.TH
 
-import qualified Data.Aeson.Casing as Casing
-import qualified Text.Casing       as Casing
+import qualified Data.Aeson.Casing     as Casing
+import qualified Text.Casing           as Casing
+
+import qualified CustomField.VenueType as VenueType
 
 getVenuesR :: GroupId -> Handler Value
 getVenuesR groupId = do
-    vs <- runDB $ selectList [VenueGroupId ==. Just groupId] []
+    vs <- runDB $ selectList [VenueGroupId ==. Just groupId, VenueVenueType ==. Just VenueType.Physical] []
     returnJson $ map venueValueWithAddress vs
 
 postVenuesR :: GroupId -> Handler Value
@@ -27,6 +29,8 @@ postVenuesR groupId = do
                   , venueStreet1 = postAddress1
                   , venueStreet2 = postAddress2
                   , venueGroupId = Just groupId
+                  , venueUrl = Nothing
+                  , venueVenueType = Just VenueType.Physical
                   }
     vid <- runDB $ insert v
     returnJson . venueValueWithAddress $ Entity vid v

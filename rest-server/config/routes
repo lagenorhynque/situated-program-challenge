@@ -21,3 +21,4 @@
 /groups/#GroupId/venues VenuesR GET POST
 /groups/#GroupId/meetups MeetupsR GET POST
 /groups/#GroupId/meetups/#MeetupId MeetupR GET
+/groups/#GroupId/online-venues OnlineVenuesR GET POST
