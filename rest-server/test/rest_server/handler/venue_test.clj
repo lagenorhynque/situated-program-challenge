@@ -15,7 +15,8 @@
                                                    :city "Yokohama-shi"
                                                    :street1 "Kohoku-ku"
                                                    :street2 "3-10 Shinyokohama"
-                                                   :group-id 1}
+                                                   :group-id 1
+                                                   :url nil}
                                                   {:id 2
                                                    :name "Nippon Gaishi Hall"
                                                    :postal-code "457-0833"
@@ -23,7 +24,8 @@
                                                    :city "Nagoya-shi"
                                                    :street1 "Minami-ku"
                                                    :street2 "5-1-16 Higashimatabeecho"
-                                                   :group-id 1}]})})
+                                                   :group-id 1
+                                                   :url nil}]})})
         group-id 1]
     (t/is (= [:ataraxy.response/ok [{:venue-id 1
                                      :venue-name "Yokohama Arena"
