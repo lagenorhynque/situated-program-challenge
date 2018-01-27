@@ -55,6 +55,16 @@ spec = withApp $ do
                                          , venueUrl = Nothing
                                          , venueVenueType = Just VenueType.Physical
                                          }
+            v4id <- runDB $ insert Venue { venueName = Just "ニコニコ動画"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just g2id
+                                         , venueUrl = Just "http://www.nicovideo.jp/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             mu1id <- runDB $ insert Meetup { meetupTitle = "μ's Final LoveLive!"
                                            , meetupStartAt = Just (read "2016-03-31 05:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2016-03-31 11:00:00.000" :: UTCTime)
@@ -74,7 +84,7 @@ spec = withApp $ do
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just v3id
                                            , meetupGroupId = Just g2id
-                                           , meetupOnlineVenueId = Nothing
+                                           , meetupOnlineVenueId = Just v4id
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "Umi"
                                           , memberLastName = Just "Sonoda"
@@ -171,6 +181,7 @@ spec = withApp $ do
                                                                       ]
                                                 ]
                                        ]
+                         , "online-venues" .= ([] :: [Value])
                          , "meetups" .= [ object [ "event-id" .= mu1id
                                                  , "title" .= ("μ's Final LoveLive!" :: Value)
                                                  , "start-at" .= (read "2016-03-31 05:00:00.000" :: UTCTime)
@@ -184,6 +195,7 @@ spec = withApp $ do
                                                                                            , "address2" .= ("" :: Value)
                                                                                            ]
                                                                      ]
+                                                 , "online-venue" .= Null
                                                  , "members" .= [ object [ "member-id" .= m1id
                                                                          , "first-name" .= ("Umi" :: Value)
                                                                          , "last-name" .= ("Sonoda" :: Value)
@@ -235,6 +247,11 @@ spec = withApp $ do
                                                                       ]
                                                 ]
                                        ]
+                         , "online-venues" .= [ object [ "online-venue-id" .= v4id
+                                                       , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                       , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                       ]
+                                              ]
                          , "meetups" .= [ object [ "event-id" .= mu2id
                                                  , "title" .= ("Aqours First LoveLive!" :: Value)
                                                  , "start-at" .= (read "2017-02-25 07:30:00.000" :: UTCTime)
@@ -248,6 +265,7 @@ spec = withApp $ do
                                                                                            , "address2" .= ("3-10 Shinyokohama" :: Value)
                                                                                            ]
                                                                      ]
+                                                 , "online-venue" .= Null
                                                  , "members" .= [ object [ "member-id" .= m3id
                                                                          , "first-name" .= ("You" :: Value)
                                                                          , "last-name" .= ("Watanabe" :: Value)
@@ -278,6 +296,10 @@ spec = withApp $ do
                                                                                            , "address2" .= ("5-1-16 Higashimatabeecho" :: Value)
                                                                                            ]
                                                                      ]
+                                                 , "online-venue" .= object [ "online-venue-id" .= v4id
+                                                                            , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                                            , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                                            ]
                                                  , "members" .= [ object [ "member-id" .= m3id
                                                                          , "first-name" .= ("You" :: Value)
                                                                          , "last-name" .= ("Watanabe" :: Value)
@@ -357,6 +379,16 @@ spec = withApp $ do
                                          , venueUrl = Nothing
                                          , venueVenueType = Just VenueType.Physical
                                          }
+            v3id <- runDB $ insert Venue { venueName = Just "ニコニコ動画"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Just "http://www.nicovideo.jp/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             mu1id <- runDB $ insert Meetup { meetupTitle = "Aqours First LoveLive!"
                                            , meetupStartAt = Just (read "2017-02-25 07:30:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-02-25 12:30:00.000" :: UTCTime)
@@ -369,7 +401,7 @@ spec = withApp $ do
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just v2id
                                            , meetupGroupId = Just gid
-                                           , meetupOnlineVenueId = Nothing
+                                           , meetupOnlineVenueId = Just v3id
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "You"
                                           , memberLastName = Just "Watanabe"
@@ -454,6 +486,11 @@ spec = withApp $ do
                                                                     ]
                                               ]
                                      ]
+                       , "online-venues" .= [ object [ "online-venue-id" .= v3id
+                                                     , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                     , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                     ]
+                                            ]
                        , "meetups" .= [ object [ "event-id" .= mu1id
                                                , "title" .= ("Aqours First LoveLive!" :: Value)
                                                , "start-at" .= (read "2017-02-25 07:30:00.000" :: UTCTime)
@@ -467,6 +504,7 @@ spec = withApp $ do
                                                                                          , "address2" .= ("3-10 Shinyokohama" :: Value)
                                                                                          ]
                                                                    ]
+                                               , "online-venue" .= Null
                                                , "members" .= [ object [ "member-id" .= m1id
                                                                        , "first-name" .= ("You" :: Value)
                                                                        , "last-name" .= ("Watanabe" :: Value)
@@ -497,6 +535,10 @@ spec = withApp $ do
                                                                                          , "address2" .= ("5-1-16 Higashimatabeecho" :: Value)
                                                                                          ]
                                                                    ]
+                                               , "online-venue" .= object [ "online-venue-id" .= v3id
+                                                                          , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                                          , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                                          ]
                                                , "members" .= [ object [ "member-id" .= m1id
                                                                        , "first-name" .= ("You" :: Value)
                                                                        , "last-name" .= ("Watanabe" :: Value)

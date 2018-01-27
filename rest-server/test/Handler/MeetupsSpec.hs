@@ -39,6 +39,16 @@ spec = withApp $ do
                                          , venueUrl = Nothing
                                          , venueVenueType = Just VenueType.Physical
                                          }
+            v3id <- runDB $ insert Venue { venueName = Just "ニコニコ動画"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Just "http://www.nicovideo.jp/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             mu1id <- runDB $ insert Meetup { meetupTitle = "Aqours First LoveLive!"
                                            , meetupStartAt = Just (read "2017-02-25 07:30:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-02-25 12:30:00.000" :: UTCTime)
@@ -51,7 +61,7 @@ spec = withApp $ do
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
                                            , meetupVenueId = Just v2id
                                            , meetupGroupId = Just gid
-                                           , meetupOnlineVenueId = Nothing
+                                           , meetupOnlineVenueId = Just v3id
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "You"
                                           , memberLastName = Just "Watanabe"
@@ -102,6 +112,7 @@ spec = withApp $ do
                                                                    , "address2" .= ("3-10 Shinyokohama" :: Value)
                                                                    ]
                                              ]
+                         , "online-venue" .= Null
                          , "members" .= [ object [ "member-id" .= m1id
                                                  , "first-name" .= ("You" :: Value)
                                                  , "last-name" .= ("Watanabe" :: Value)
@@ -127,6 +138,10 @@ spec = withApp $ do
                                                                    , "address2" .= ("5-1-16 Higashimatabeecho" :: Value)
                                                                    ]
                                              ]
+                         , "online-venue" .= object [ "online-venue-id" .= v3id
+                                                    , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                    , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                    ]
                          , "members" .= [ object [ "member-id" .= m3id
                                                  , "first-name" .= ("Dia" :: Value)
                                                  , "last-name" .= ("Kurosawa" :: Value)
@@ -144,22 +159,32 @@ spec = withApp $ do
     describe "postMeetupsR" $
         it "creates a meetup" $ do
             let gid = toSqlKey 1
-            vid <- runDB $ insert Venue { venueName = Just "Kobe World Memorial Hall"
-                                        , venuePostalCode = Just "650-0046"
-                                        , venuePrefecture = Just "Hyogo-ken"
-                                        , venueCity = Just "Kobe-shi"
-                                        , venueStreet1 = Just "Chuo-ku"
-                                        , venueStreet2 = Just "6-6-12-2 Minatojima Nakamachi"
-                                        , venueGroupId = Just gid
-                                        , venueUrl = Nothing
-                                        , venueVenueType = Just VenueType.Physical
-                                        }
+            v1id <- runDB $ insert Venue { venueName = Just "Kobe World Memorial Hall"
+                                         , venuePostalCode = Just "650-0046"
+                                         , venuePrefecture = Just "Hyogo-ken"
+                                         , venueCity = Just "Kobe-shi"
+                                         , venueStreet1 = Just "Chuo-ku"
+                                         , venueStreet2 = Just "6-6-12-2 Minatojima Nakamachi"
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
+                                         }
+            v2id <- runDB $ insert Venue { venueName = Just "AbemaTV"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Just "https://abema.tv/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             let mu = Meetup { meetupTitle = "Aqours 2nd LoveLive! Kobe"
                             , meetupStartAt = Just (read "2017-08-19 08:00:00.000" :: UTCTime)
                             , meetupEndAt = Just (read "2017-08-19 13:00:00.000" :: UTCTime)
-                            , meetupVenueId = Just vid
+                            , meetupVenueId = Just v1id
                             , meetupGroupId = Nothing
-                            , meetupOnlineVenueId = Nothing
+                            , meetupOnlineVenueId = Just v2id
                             }
             request $ do
                 setMethod "POST"
@@ -176,7 +201,7 @@ spec = withApp $ do
                        , "title" .= ("Aqours 2nd LoveLive! Kobe" :: Value)
                        , "start-at" .= (read "2017-08-19 08:00:00.000" :: UTCTime)
                        , "end-at" .= (read "2017-08-19 13:00:00.000" :: UTCTime)
-                       , "venue" .= object [ "venue-id" .= vid
+                       , "venue" .= object [ "venue-id" .= v1id
                                            , "venue-name" .= ("Kobe World Memorial Hall" :: Value)
                                            , "address" .= object [ "postal-code" .= ("650-0046" :: Value)
                                                                  , "prefecture" .= ("Hyogo-ken" :: Value)
@@ -185,28 +210,42 @@ spec = withApp $ do
                                                                  , "address2" .= ("6-6-12-2 Minatojima Nakamachi" :: Value)
                                                                  ]
                                            ]
+                       , "online-venue" .= object [ "online-venue-id" .= v2id
+                                                  , "venue-name" .= ("AbemaTV" :: Value)
+                                                  , "url" .= ("https://abema.tv/" :: Value)
+                                                  ]
                        , "members" .= ([] :: [Value])
                        ]
 
     describe "getMeetupR" $ do
         it "finds a meetup" $ do
             let gid = toSqlKey 1
-            vid <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
-                                        , venuePostalCode = Just "457-0833"
-                                        , venuePrefecture = Just "Aichi-ken"
-                                        , venueCity = Just "Nagoya-shi"
-                                        , venueStreet1 = Just "Minami-ku"
-                                        , venueStreet2 = Just "5-1-16 Higashimatabeecho"
-                                        , venueGroupId = Just gid
-                                        , venueUrl = Nothing
-                                        , venueVenueType = Just VenueType.Physical
-                                        }
+            v1id <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
+                                         , venuePostalCode = Just "457-0833"
+                                         , venuePrefecture = Just "Aichi-ken"
+                                         , venueCity = Just "Nagoya-shi"
+                                         , venueStreet1 = Just "Minami-ku"
+                                         , venueStreet2 = Just "5-1-16 Higashimatabeecho"
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
+                                         }
+            v2id <- runDB $ insert Venue { venueName = Just "ニコニコ動画"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Just "http://www.nicovideo.jp/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             muid <- runDB $ insert Meetup { meetupTitle = "Aqours 2nd LoveLive! Nagoya"
                                            , meetupStartAt = Just (read "2017-08-05 08:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
-                                           , meetupVenueId = Just vid
+                                           , meetupVenueId = Just v1id
                                            , meetupGroupId = Just gid
-                                           , meetupOnlineVenueId = Nothing
+                                           , meetupOnlineVenueId = Just v2id
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "Dia"
                                           , memberLastName = Just "Kurosawa"
@@ -234,7 +273,7 @@ spec = withApp $ do
                        , "title" .= ("Aqours 2nd LoveLive! Nagoya" :: Value)
                        , "start-at" .= (read "2017-08-05 08:00:00.000" :: UTCTime)
                        , "end-at" .= (read "2017-08-05 13:00:00.000" :: UTCTime)
-                       , "venue" .= object [ "venue-id" .= vid
+                       , "venue" .= object [ "venue-id" .= v1id
                                            , "venue-name" .= ("Nippon Gaishi Hall" :: Value)
                                            , "address" .= object [ "postal-code" .= ("457-0833" :: Value)
                                                                  , "prefecture" .= ("Aichi-ken" :: Value)
@@ -243,6 +282,10 @@ spec = withApp $ do
                                                                  , "address2" .= ("5-1-16 Higashimatabeecho" :: Value)
                                                                  ]
                                            ]
+                       , "online-venue" .= object [ "online-venue-id" .= v2id
+                                                  , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                  , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                  ]
                        , "members" .= [ object [ "member-id" .= m1id
                                                , "first-name" .= ("Dia" :: Value)
                                                , "last-name" .= ("Kurosawa" :: Value)
@@ -270,22 +313,32 @@ spec = withApp $ do
     describe "postMeetupMemberR" $
         it "creates a meetup member" $ do
             let gid = toSqlKey 1
-            vid <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
-                                        , venuePostalCode = Just "457-0833"
-                                        , venuePrefecture = Just "Aichi-ken"
-                                        , venueCity = Just "Nagoya-shi"
-                                        , venueStreet1 = Just "Minami-ku"
-                                        , venueStreet2 = Just "5-1-16 Higashimatabeecho"
-                                        , venueGroupId = Just gid
-                                        , venueUrl = Nothing
-                                        , venueVenueType = Just VenueType.Physical
-                                        }
+            v1id <- runDB $ insert Venue { venueName = Just "Nippon Gaishi Hall"
+                                         , venuePostalCode = Just "457-0833"
+                                         , venuePrefecture = Just "Aichi-ken"
+                                         , venueCity = Just "Nagoya-shi"
+                                         , venueStreet1 = Just "Minami-ku"
+                                         , venueStreet2 = Just "5-1-16 Higashimatabeecho"
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Nothing
+                                         , venueVenueType = Just VenueType.Physical
+                                         }
+            v2id <- runDB $ insert Venue { venueName = Just "ニコニコ動画"
+                                         , venuePostalCode = Nothing
+                                         , venuePrefecture = Nothing
+                                         , venueCity = Nothing
+                                         , venueStreet1 = Nothing
+                                         , venueStreet2 = Nothing
+                                         , venueGroupId = Just gid
+                                         , venueUrl = Just "http://www.nicovideo.jp/"
+                                         , venueVenueType = Just VenueType.Online
+                                         }
             muid <- runDB $ insert Meetup { meetupTitle = "Aqours 2nd LoveLive! Nagoya"
                                            , meetupStartAt = Just (read "2017-08-05 08:00:00.000" :: UTCTime)
                                            , meetupEndAt = Just (read "2017-08-05 13:00:00.000" :: UTCTime)
-                                           , meetupVenueId = Just vid
+                                           , meetupVenueId = Just v1id
                                            , meetupGroupId = Just gid
-                                           , meetupOnlineVenueId = Nothing
+                                           , meetupOnlineVenueId = Just v2id
                                            }
             m1id <- runDB $ insert Member { memberFirstName = Just "You"
                                           , memberLastName = Just "Watanabe"
@@ -318,7 +371,7 @@ spec = withApp $ do
                        , "title" .= ("Aqours 2nd LoveLive! Nagoya" :: Value)
                        , "start-at" .= (read "2017-08-05 08:00:00.000" :: UTCTime)
                        , "end-at" .= (read "2017-08-05 13:00:00.000" :: UTCTime)
-                       , "venue" .= object [ "venue-id" .= vid
+                       , "venue" .= object [ "venue-id" .= v1id
                                            , "venue-name" .= ("Nippon Gaishi Hall" :: Value)
                                            , "address" .= object [ "postal-code" .= ("457-0833" :: Value)
                                                                  , "prefecture" .= ("Aichi-ken" :: Value)
@@ -327,6 +380,10 @@ spec = withApp $ do
                                                                  , "address2" .= ("5-1-16 Higashimatabeecho" :: Value)
                                                                  ]
                                            ]
+                       , "online-venue" .= object [ "online-venue-id" .= v2id
+                                                  , "venue-name" .= ("ニコニコ動画" :: Value)
+                                                  , "url" .= ("http://www.nicovideo.jp/" :: Value)
+                                                  ]
                        , "members" .= [ object [ "member-id" .= m1id
                                                , "first-name" .= ("You" :: Value)
                                                , "last-name" .= ("Watanabe" :: Value)
