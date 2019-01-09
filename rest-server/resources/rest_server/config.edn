@@ -1,5 +1,22 @@
-{:duct.core/project-ns  rest-server
- :duct.core/environment :production
+{:duct.profile/base
+ {:duct.core/project-ns  rest-server
+
+  :rest-server.handler.meetup/list {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.meetup/create {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.meetup/fetch {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.meetup/join {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.member/list {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.member/create {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.member/fetch {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.venue/list {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.venue/create {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.group/list {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.group/create {:db #ig/ref :duct.database/sql}
+  :rest-server.handler.group/join {:db #ig/ref :duct.database/sql}}
+
+ :duct.profile/dev #duct/include "dev"
+ :duct.profile/local #duct/include "local"
+ :duct.profile/prod {}
 
  :duct.module/logging {}
  :duct.module.web/api {}
@@ -29,17 +46,4 @@
      {:get [:meetup/fetch ^int group-id ^int meetup-id]}}
     "/venues"
     {:get [:venue/list ^int group-id]
-     [:post {venue :body-params}] [:venue/create ^int group-id venue]}}}}
-
- :rest-server.handler.meetup/list {:db #ig/ref :duct.database/sql}
- :rest-server.handler.meetup/create {:db #ig/ref :duct.database/sql}
- :rest-server.handler.meetup/fetch {:db #ig/ref :duct.database/sql}
- :rest-server.handler.meetup/join {:db #ig/ref :duct.database/sql}
- :rest-server.handler.member/list {:db #ig/ref :duct.database/sql}
- :rest-server.handler.member/create {:db #ig/ref :duct.database/sql}
- :rest-server.handler.member/fetch {:db #ig/ref :duct.database/sql}
- :rest-server.handler.venue/list {:db #ig/ref :duct.database/sql}
- :rest-server.handler.venue/create {:db #ig/ref :duct.database/sql}
- :rest-server.handler.group/list {:db #ig/ref :duct.database/sql}
- :rest-server.handler.group/create {:db #ig/ref :duct.database/sql}
- :rest-server.handler.group/join {:db #ig/ref :duct.database/sql}}
+     [:post {venue :body-params}] [:venue/create ^int group-id venue]}}}}}
