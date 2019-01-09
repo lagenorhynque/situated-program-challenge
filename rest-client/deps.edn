@@ -1,4 +1,4 @@
-{:path ["src"]
+{:paths ["src"]
  :deps {cheshire {:mvn/version "5.8.1"}
         clj-http {:mvn/version "3.9.1"}
         org.clojure/clojure {:mvn/version "1.10.0"}}
