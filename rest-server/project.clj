@@ -11,10 +11,11 @@
                  [org.postgresql/postgresql "42.2.5"]
                  [camel-snake-kebab "0.4.0"]
                  [honeysql "0.9.4"]]
-  :plugins [[duct/lein-duct "0.11.1"]]
+  :plugins [[duct/lein-duct "0.11.2"]]
   :main ^:skip-aot rest-server.main
   :resource-paths ["resources" "target/resources"]
   :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
+  :middleware     [lein-duct.plugin/middleware]
   :profiles
   {:dev  [:project/dev :profiles/dev]
    :repl {:prep-tasks   ^:replace ["javac" "compile"]
